@@ -27,11 +27,22 @@ public class AccountService {
 	 * @return newly created Account
 	 */
 	public ChatAccount expressRegister(String email, String password, String displayName) {
-		// create operator
+		ChatAccount acc = getByOwnerEmail(email);
+		if (acc != null)	{
+			throw new IllegalArgumentException("This email already assosiated with one of koockoo accounts");
+		}
 		authService.expressRegister(email, password, displayName);
-		ChatAccount acc = new ChatAccount();
+		acc = new ChatAccount();
 		acc.setOwnerRef(email);
 		return save(acc);
+	}
+	
+	public String generateSnippet(String ownerEmail) {
+		ChatAccount acc = getByOwnerEmail(ownerEmail);
+		if (acc == null)	{
+			throw new IllegalArgumentException("This email is not assosiated with any of koockoo accounts");
+		}	
+		return buildSnippet(acc.getId());
 	}
 	
 	public ChatAccount getById(String accountId) {
@@ -41,4 +52,12 @@ public class AccountService {
 	public ChatAccount getByOwnerEmail(String email) {
 		return accountDao.getByOwnerRef(email);
 	}	
+	
+	private String buildSnippet(String accountId) {
+		return 
+			"<script type='text/javascript' src='http://koockoo.com/client/js/koockoo.js'/>\n"+
+			"<script type='text/javascript'>\n"+
+			"    var _koockoo = {'id':'"+accountId+"'};\n"+
+			"</script>";
+	}
 }

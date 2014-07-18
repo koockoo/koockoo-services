@@ -29,17 +29,21 @@ public class AccountController {
 	}	
 	
 	@RequestMapping(value = "express", method = RequestMethod.POST) 
-    public void createAccount(@RequestParam String email, @RequestParam String password, @RequestParam String displayName) {
-		log.info("express register account for email:"+ email);
-		ChatAccount account = new ChatAccount();
-		accountService.save(account);
+    public ResponseWrapper<String> express(@RequestParam String email, @RequestParam String password, @RequestParam String displayName) {
+		log.info("in express register account for email:"+ email);
+		try {
+			accountService.expressRegister(email, password, displayName);
+		}catch (Exception e) {
+			return new ResponseWrapper<String>(ResponseCode.BAD_REQUEST, e.getMessage());
+		}
+		return new ResponseWrapper<>();
 	}	
 	
 	@RequestMapping(value = "snippet/{email}", method = RequestMethod.GET) 
     public ResponseWrapper<String> getSnippet(@PathVariable String email) {
 		// get account by email
 		ChatAccount account = accountService.getByOwnerEmail(email);
-		// create new account from the request.
+		
 		if (account != null) {
 			return new ResponseWrapper<String>(generateSnippet(account.getId()));
 		} else {

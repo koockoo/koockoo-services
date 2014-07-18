@@ -15,7 +15,7 @@ public class AuthDAO extends BaseCassandraDAO {
 	}
 
 	public void register(Credentials cred, ChatOperator oper) {
-		sf.getMappingSession().withBatch().save(cred).save(oper);
+		sf.getMappingSession().withBatch().save(cred).save(oper).execute();
 	}
 
 

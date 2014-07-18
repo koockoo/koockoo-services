@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koockoo.chat.dao.AuthDAO;
-import com.koockoo.chat.dao.CassandraSessionFactory;
 import com.koockoo.chat.model.Auth;
-import com.koockoo.chat.model.ChatContact;
 import com.koockoo.chat.model.ChatOperator;
 import com.koockoo.chat.model.Credentials;
 

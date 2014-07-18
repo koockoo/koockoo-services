@@ -9,17 +9,9 @@ import com.koockoo.chat.model.ChatAccount;
 
 @Repository
 public class AccountDAO extends BaseCassandraDAO {
-	
-	public ChatAccount save(ChatAccount acc) {
-		return save(acc);
-	}
 
 	public ChatAccount get(String id) {
 		return get(ChatAccount.class, id);
-	}
-	
-	public void delete(ChatAccount acc) {
-		super.delete(acc);
 	}
 	
 	public ChatAccount getByOwnerRef(String ownerRef) {
