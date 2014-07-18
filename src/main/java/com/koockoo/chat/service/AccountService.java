@@ -1,5 +1,7 @@
 package com.koockoo.chat.service;
 
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,7 @@ import com.koockoo.chat.model.ChatAccount;
 
 @Service
 public class AccountService {
+	private static final Logger log = Logger.getLogger(AccountService.class.getName());
 	
 	@Autowired
 	private AccountDAO accountDao;
@@ -38,6 +41,7 @@ public class AccountService {
 	}
 	
 	public String generateSnippet(String ownerEmail) {
+		log.info("in generateSnippet for email:"+ownerEmail);
 		ChatAccount acc = getByOwnerEmail(ownerEmail);
 		if (acc == null)	{
 			throw new IllegalArgumentException("This email is not assosiated with any of koockoo accounts");

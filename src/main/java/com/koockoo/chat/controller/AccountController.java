@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.koockoo.chat.model.ChatAccount;
 import com.koockoo.chat.model.ResponseCode;
 import com.koockoo.chat.model.ResponseWrapper;
 import com.koockoo.chat.service.AccountService;
@@ -23,7 +22,7 @@ public class AccountController {
 	@Autowired
 	private AccountService accountService;
 
-	@RequestMapping(value = "/ping", method = RequestMethod.GET) 
+	@RequestMapping(value = "ping", method = RequestMethod.GET) 
     public ResponseWrapper<String> ping() {		
 		 return new ResponseWrapper<>();
 	}	
@@ -39,23 +38,14 @@ public class AccountController {
 		return new ResponseWrapper<>();
 	}	
 	
-	@RequestMapping(value = "snippet/{email}", method = RequestMethod.GET) 
-    public ResponseWrapper<String> getSnippet(@PathVariable String email) {
-		// get account by email
-		ChatAccount account = accountService.getByOwnerEmail(email);
-		
-		if (account != null) {
-			return new ResponseWrapper<String>(generateSnippet(account.getId()));
-		} else {
-			return new ResponseWrapper<String>(ResponseCode.BAD_REQUEST, "No Account Found for "+email);
+	@RequestMapping(value = "snippet", method = RequestMethod.GET) 
+    public ResponseWrapper<String> getSnippet(@RequestParam String email) {
+		try {
+			log.info("in getSnippet: request param email:"+email);
+			return new ResponseWrapper<String>(accountService.generateSnippet(email));
+		} catch (Exception e) {
+			return new ResponseWrapper<String>(ResponseCode.BAD_REQUEST, e.getMessage());
 		}
 	}	
 	
-	private String generateSnippet(String accountId) {
-		return 
-			"<script type='text/javascript' src='http://koockoo.com/client/js/koockoo.js'/>\n"+
-			"<script type='text/javascript'>\n"+
-			"    var _koockoo = {'id':'"+accountId+"'};\n"+
-			"</script>";
-	}
 }
