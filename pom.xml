@@ -13,6 +13,7 @@
 	<name>koockoo-services</name>
 	<properties>
 		<java-version>1.7</java-version>
+		<java.version>1.7</java.version>
 		<start-class>com.koockoo.chat.Main</start-class>
 	</properties>
 
