@@ -6,18 +6,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="operator")
-public class ChatOperator {
+public class ChatOperator extends ChatContact{
 	
 	@Id
-	private String email;
-	private String displayName;
+	protected String email;
 	
-	public String getDisplayName() {
-		return displayName;
-	}
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
 	public String getEmail() {
 		return email;
 	}

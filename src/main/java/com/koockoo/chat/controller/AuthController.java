@@ -19,11 +19,11 @@ public class AuthController {
 	AuthService authService;
 	
 	/** Operator Signin with credentials */
-	@RequestMapping(value = "signin/operator", method = RequestMethod.GET)
+	@RequestMapping(value = "signin/operator", method = RequestMethod.POST)
 	public ResponseWrapper<Auth> operatorSignin(@RequestParam String login, @RequestParam String password) {
 		Auth auth = null;
 		try {
-			auth = authService.signin(login, password); 
+			auth = authService.operatorSignin(login, password); 
 		} catch (Exception e) {
 			return new ResponseWrapper<Auth>(ResponseCode.INTERNAL_ERROR, e.getMessage());
 		}
@@ -34,7 +34,7 @@ public class AuthController {
 	}
 	
 	/** Guest Signin with name */
-	@RequestMapping(value = "signin/guest", method = RequestMethod.GET)
+	@RequestMapping(value = "signin/guest", method = RequestMethod.POST)
 	public ResponseWrapper<Auth> guestSignin(@RequestParam String displayName) {
 		Auth auth = null;
 		try {
@@ -47,9 +47,9 @@ public class AuthController {
 	
 	/** Signout. Invalidates auth */
 	@RequestMapping(value = "signout", method = RequestMethod.POST)
-	public ResponseWrapper<String> signout() {
+	public ResponseWrapper<String> signout(@RequestParam String authId) {
 		try {
-			authService.signout();
+			authService.signout(authId);
 		} catch (Exception e) {
 			// ignore
 		}

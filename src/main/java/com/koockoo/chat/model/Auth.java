@@ -5,43 +5,40 @@ import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.datastax.driver.mapping.annotation.Ttl;
 
 @Entity
-@Table(name="Auth")
-@Ttl(300) /* expires after 5 mins of inactivity */
+@Table(name="auth")
+@Ttl(300) /* by default expires after 5 minutes of inactivity */
 public class Auth {
-	@Id
-	private String token = UUID.randomUUID().toString();
-	private String credentialsRef;
 	
-	@Transient
-	private Credentials credentials;
-
-	public String getToken() {
-		return token;
+	@Id
+	private String id = UUID.randomUUID().toString();
+	private String operatorRef;
+	private String guestRef;
+	
+	public String getId() {
+		return id;
 	}
 
-	public String getCredentialsRef() {
-		return credentialsRef;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-
-	public Credentials getCredentials() {
-		return credentials;
+	public String getOperatorRef() {
+		return operatorRef;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setOperatorRef(String operatorRef) {
+		this.operatorRef = operatorRef;
 	}
 
-	public void setCredentialsRef(String credentialsRef) {
-		this.credentialsRef = credentialsRef;
+	public String getGuestRef() {
+		return guestRef;
 	}
 
-	public void setCredentials(Credentials credentials) {
-		this.credentials = credentials;
+	public void setGuestRef(String guestRef) {
+		this.guestRef = guestRef;
 	}
 }

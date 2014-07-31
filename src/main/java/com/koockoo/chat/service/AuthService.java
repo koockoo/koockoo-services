@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.koockoo.chat.dao.AuthDAO;
 import com.koockoo.chat.model.Auth;
+import com.koockoo.chat.model.ChatGuest;
 import com.koockoo.chat.model.ChatOperator;
 import com.koockoo.chat.model.Credentials;
 
@@ -31,6 +32,10 @@ public class AuthService {
 		return authDAO.save(cred);
 	}
 
+	public void deleteCredentials(String login)  {
+		authDAO.delete(Credentials.class, login);
+	}
+	
 	public void expressRegister(String login, String password, String displayName)  {
 		Credentials cred = new Credentials(login, password);
 		ChatOperator oper = new ChatOperator();
@@ -40,15 +45,15 @@ public class AuthService {
 		authDAO.register(cred, oper);
 	}
 	
-	public Auth signin(String login, String password) throws Exception {
+	public Auth operatorSignin(String login, String password) {
 		Auth auth = null;
 		// get credentials object for current user 
 		Credentials cred = authDAO.loadCredentials(login);
 		if (cred != null && cred.matches(login, password)) {
 			// create new auth token
 			auth = new Auth();
-			auth.setCredentialsRef(cred.getLogin());
-			authDAO.save(auth);
+			auth.setOperatorRef(cred.getOperatorRef());
+			auth = authDAO.save(auth);
 		}
 		return auth;
 	}	
@@ -62,20 +67,27 @@ public class AuthService {
 		return authDAO.extendAuth(token);
 	}	
 	
-	public Auth guestSignin(String displayName) throws Exception {
-		// get credentials object for current user 
+	/**
+	 * Guest does not have login password.
+	 * This method creates a guest instance and generates valid auth token to be able to chat.
+	 * @param displayName
+	 * @return Auth
+	 */
+	public Auth guestSignin(String displayName) {
+		ChatGuest guest = new ChatGuest();
+		guest.setDisplayName(displayName);
+		authDAO.save(guest);
 		Auth auth = new Auth();
+		auth.setGuestRef(guest.getId());
 		authDAO.save(auth);		
 		return auth;
 	}	
 	
-	public void signout() {
-		// get credentials object for current user 
-		String token = null; //TODO: get token for current session. Token set by security filter
+	public void signout(String id) {
 		try {
-			authDAO.deleteAuth(token);
+			authDAO.delete(Auth.class, id);
 		} catch (Exception e) {
-			log.info("Skip. Exception thrown on delete Auth:"+token);
+			log.info("Skip. Exception thrown on delete Auth:"+id);
 		}
 	}	
 }

@@ -26,7 +26,7 @@ public class AccountServiceTest {
 		ChatAccount acc = target.expressRegister("email@123", "password123", "displayName123");
 		Assert.assertNotNull(acc);
 		
-		acc = target.getByOwnerEmail("email");
+		acc = target.getByOwnerEmail("email@123");
 		Assert.assertNotNull(acc);
 		
 		

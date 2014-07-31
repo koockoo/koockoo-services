@@ -18,23 +18,8 @@ public class AuthDAO extends BaseCassandraDAO {
 		sf.getMappingSession().withBatch().save(cred).save(oper).execute();
 	}
 
-
-	public void deleteAuth(Auth auth) {
-		delete(auth);
-	} 
-
-	public void deleteAuth(String token) {
-		delete(Auth.class, token);
-	} 
-
 	public Credentials getCredentials(String login) throws Exception {
 		return get(Credentials.class, login);
-	}
-	
-	public Auth loadAuth(String token) throws Exception {
-		Auth auth = get(Auth.class, token);
-		auth.setCredentials(loadCredentials(auth.getCredentialsRef()));
-		return auth;
 	}
 
 	/**
@@ -51,9 +36,9 @@ public class AuthDAO extends BaseCassandraDAO {
 		return false;
 	} 
 	
-	public Credentials loadCredentials(String login) throws Exception {
+	public Credentials loadCredentials(String login)  {
 		Credentials cred = get(Credentials.class, login);
-		if (cred.getOperatorRef() != null) {
+		if (cred !=null && cred.getOperatorRef() != null) {
 			ChatOperator cont = get(ChatOperator.class, cred.getOperatorRef());
 			cred.setChatOperator(cont);
 		}

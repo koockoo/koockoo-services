@@ -34,11 +34,11 @@ public class ChatSession implements Comparable<ChatSession> {
 		this.id = id;
 	}
 
-	public void setInitiator(ChatContact initiator) {
-		setInitiatorId(initiator.getId());
-		setDisplayName(initiator.getDisplayName());
-		addContact(initiator);
-	}
+//	public void setInitiator(ChatContact initiator) {
+//		setInitiatorId(initiator.getId());
+//		setDisplayName(initiator.getDisplayName());
+//		addContact(initiator);
+//	}
 	public List<ChatContact> getContacts() {
 		return contacts;
 	}
