@@ -23,13 +23,22 @@ public class AccountServiceTest {
 	
 	@Test
 	public void testExpress() throws Exception {
-		ChatAccount acc = target.expressRegister("email@123", "password123", "displayName123");
+	    target.delete("email@123", "password123");
+	    
+	    ChatAccount acc = target.expressRegister("email@123", "password123", "displayName123");
 		Assert.assertNotNull(acc);
 		
 		acc = target.getByOwnerEmail("email@123");
 		Assert.assertNotNull(acc);
 		
+		try {
+		    acc  = target.expressRegister("email@123", "password123", "displayName123");
+		    Assert.assertNull(acc);
+		} catch (Exception e) {}
 		
+		target.delete("email@123", "password123");
 		
+	    acc = target.getByOwnerEmail("email@123");
+	    Assert.assertNull(acc);
 	}
 }

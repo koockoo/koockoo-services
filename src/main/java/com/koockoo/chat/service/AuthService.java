@@ -48,8 +48,8 @@ public class AuthService {
 	public Auth operatorSignin(String login, String password) {
 		Auth auth = null;
 		// get credentials object for current user 
-		Credentials cred = authDAO.loadCredentials(login);
-		if (cred != null && cred.matches(login, password)) {
+		Credentials cred = getCredentials(login, password);
+		if (cred != null) {
 			// create new auth token
 			auth = new Auth();
 			auth.setOperatorRef(cred.getOperatorRef());
@@ -58,6 +58,14 @@ public class AuthService {
 		return auth;
 	}	
 
+    public Credentials getCredentials(String login, String password) {
+        Credentials cred = authDAO.loadCredentials(login);
+        if (cred != null && cred.matches(login, password)) {
+            return cred;
+        }
+        return null;
+    }
+    
 	/**
 	 * Verify that Auth is alive
 	 * @param token

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.koockoo.chat.dao.AccountDAO;
 import com.koockoo.chat.model.ChatAccount;
+import com.koockoo.chat.model.Credentials;
 
 @Service
 public class AccountService {
@@ -39,7 +40,27 @@ public class AccountService {
 		acc.setOwnerRef(email);
 		return save(acc);
 	}
-	
+
+    /**
+     * Create credentials, Operator and Account
+     * @param email
+     * @param password
+     * @param displayName
+     * @return newly created Account
+     */
+    public void delete(String email, String password) {
+        ChatAccount acc = getByOwnerEmail(email);
+        if (acc == null)    {
+            throw new IllegalArgumentException("Not an owner email");
+        }
+        
+        Credentials cred = authService.getCredentials(email, password);
+        if (cred == null)    {
+            throw new IllegalArgumentException("Invalid Credentials");
+        }
+        accountDao.delete(acc);
+    }
+    
 	public String generateSnippet(String ownerEmail) {
 		log.info("in generateSnippet for email:"+ownerEmail);
 		ChatAccount acc = getByOwnerEmail(ownerEmail);
