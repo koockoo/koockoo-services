@@ -1,53 +1,41 @@
 package com.koockoo.chat.dao;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
-import com.datastax.driver.mapping.MappingSession;
 
 /**
- * This class initializes connection to Cassandra Cluster.
- * All DAO implementations reuse this component.
+ * This class is responsible for opening Datastax Session to Cassandra Cluster.
+ * And creating keyspace if it does not exists yet.
  */
 @Repository
-public class CassandraSessionFactory {
+public class CassandraSessionFactory implements InitializingBean {
 
-    protected String node = "127.0.0.1";
-    protected String keyspace = "koockoo";
+    @Value("${cassandra.node}")
+    protected String node;
+    
+    @Value("${cassandra.keyspace}")
+    protected String keyspace;
+    
     protected Cluster cluster;
 	protected Session session;
-	protected MappingSession mappingSession;
 	
     /** only 1 thread is permitted to open connection */
-    protected synchronized void connect() {
+    private void connect() {
         if (session == null) {
             cluster = Cluster.builder().addContactPoint(node).build();
             session = cluster.connect();
             session.execute("CREATE KEYSPACE IF NOT EXISTS "+ getKeyspace() +
                 " WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 }");
-
-            mappingSession = new MappingSession(getKeyspace(), getSession());
         }   
     }
 	
     public Session getSession() {
-        if (session == null) {
-            connect();
-        }
         return session;
     }
-
-    public MappingSession getMappingSession() {
-        if (session == null) {
-            connect();
-        }
-        return mappingSession;
-    }
-
-	public void setMappingSession(MappingSession mappingSession) {
-		this.mappingSession = mappingSession;
-	}
 
 	public void setSession(Session session) {
 		this.session = session;
@@ -76,4 +64,9 @@ public class CassandraSessionFactory {
 	public void setCluster(Cluster cluster) {
 		this.cluster = cluster;
 	}
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        connect();
+    }
 }

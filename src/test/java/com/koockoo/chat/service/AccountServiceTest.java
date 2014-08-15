@@ -23,7 +23,10 @@ public class AccountServiceTest {
 	
 	@Test
 	public void testExpress() throws Exception {
-	    target.delete("email@123", "password123");
+	    try {
+	        target.delete("email@123", "password123");
+        } catch (Exception e) {}
+	    
 	    
 	    ChatAccount acc = target.expressRegister("email@123", "password123", "displayName123");
 		Assert.assertNotNull(acc);

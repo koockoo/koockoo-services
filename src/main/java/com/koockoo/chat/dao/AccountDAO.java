@@ -18,7 +18,7 @@ public class AccountDAO extends BaseCassandraDAO {
 	    Statement stmt = buildQueryForColumn(ChatAccount.class, "ownerRef", ownerRef);
         if (stmt==null) return null;
 
-        List<ChatAccount> result = sf.getMappingSession().getByQuery(ChatAccount.class, stmt);
+        List<ChatAccount> result = getByQuery(ChatAccount.class, stmt);
         if (result == null || result.size()==0) return null;
 
         return result.get(0);
