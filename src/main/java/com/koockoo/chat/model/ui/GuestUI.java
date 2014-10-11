@@ -1,6 +1,6 @@
 package com.koockoo.chat.model.ui;
 
-public class Guest {
+public class GuestUI {
     private String id;
     private String displayName;
     private String location;

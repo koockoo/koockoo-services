@@ -5,6 +5,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.koockoo.chat.model.db.Operator;
+
 @Entity
 @Table(name="Credentials")
 public class Credentials {
@@ -15,7 +17,7 @@ public class Credentials {
 	private String operatorRef;
 	
 	@Transient
-	private ChatOperator chatOperator;
+	private Operator chatOperator;
 	
 	public Credentials() {}
 	
@@ -45,7 +47,7 @@ public class Credentials {
 		this.login = login;
 	}
 
-	public void setChatOperator(ChatOperator chatContact) {
+	public void setChatOperator(Operator chatContact) {
 		this.chatOperator = chatContact;
 	}
 
@@ -56,7 +58,7 @@ public class Credentials {
 		this.operatorRef = operatorRef;
 	}	
 	
-	public ChatOperator getChatOperator() {
+	public Operator getChatOperator() {
 		return chatOperator;
 	}	
 

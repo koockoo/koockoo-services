@@ -1,5 +1,5 @@
 package com.koockoo.chat.model.ui;
 
-public class Operator {
+public class OperatorUI {
 
 }

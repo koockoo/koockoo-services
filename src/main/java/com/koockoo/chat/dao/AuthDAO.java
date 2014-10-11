@@ -2,9 +2,9 @@ package com.koockoo.chat.dao;
 
 import org.springframework.stereotype.Repository;
 
-import com.koockoo.chat.model.Auth;
-import com.koockoo.chat.model.ChatOperator;
 import com.koockoo.chat.model.Credentials;
+import com.koockoo.chat.model.db.Auth;
+import com.koockoo.chat.model.db.Operator;
 
 @Repository
 public class AuthDAO extends BaseCassandraDAO {
@@ -14,7 +14,7 @@ public class AuthDAO extends BaseCassandraDAO {
 		return save(cred);
 	}
 
-	public void register(Credentials cred, ChatOperator oper) {
+	public void register(Credentials cred, Operator oper) {
 		withBatch().save(cred).save(oper).execute();
 	}
 
@@ -27,19 +27,18 @@ public class AuthDAO extends BaseCassandraDAO {
 	 * @param token
 	 * @return true if auth was updated successfully otherwise false
 	 */
-	public boolean extendAuth(String token)  {
+	public Auth extendAuth(String token)  {
 		Auth auth = get(Auth.class, token);
 		if (auth != null) {
-			save(auth);
-			return true;
+			return save(auth);
 		}
-		return false;
+		return null;
 	} 
 	
 	public Credentials loadCredentials(String login)  {
 		Credentials cred = get(Credentials.class, login);
 		if (cred !=null && cred.getOperatorRef() != null) {
-			ChatOperator cont = get(ChatOperator.class, cred.getOperatorRef());
+			Operator cont = get(Operator.class, cred.getOperatorRef());
 			cred.setChatOperator(cont);
 		}
 		

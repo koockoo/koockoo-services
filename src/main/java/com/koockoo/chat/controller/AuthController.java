@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.koockoo.chat.model.Auth;
 import com.koockoo.chat.model.ResponseCode;
 import com.koockoo.chat.model.ResponseWrapper;
+import com.koockoo.chat.model.db.Auth;
 import com.koockoo.chat.service.AuthService;
 
 @RestController

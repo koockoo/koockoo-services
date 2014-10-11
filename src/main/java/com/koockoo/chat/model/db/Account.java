@@ -1,4 +1,4 @@
-package com.koockoo.chat.model;
+package com.koockoo.chat.model.db;
 
 import java.util.UUID;
 
@@ -10,22 +10,24 @@ import javax.persistence.Index;
 
 @Entity
 @Table(name="account", indexes = {
-	    @Index(name="account_owner_idx", columnList="ownerRef" )
+	    @Index(name="account_owner_email_idx", columnList="ownerEmail" )
 	})
-public class ChatAccount {
+public class Account {
 	
 	@Id
 	private String id = UUID.randomUUID().toString();
 	
 	private String ownerRef;
+	private String ownerEmail;
+	private String topicRef;
 	
 	@Transient
-	private ChatOperator owner;
+	private Operator owner;
 	
-	public ChatOperator getOwner() {
+	public Operator getOwner() {
 		return owner;
 	}
-	public void setOwner(ChatOperator owner) {
+	public void setOwner(Operator owner) {
 		this.owner = owner;
 	}
 	public String getOwnerRef() {
@@ -40,5 +42,17 @@ public class ChatAccount {
 	public void setId(String id) {
 		this.id = id;
 	}
+    public String getTopicRef() {
+        return topicRef;
+    }
+    public void setTopicRef(String topicRef) {
+        this.topicRef = topicRef;
+    }
+    public String getOwnerEmail() {
+        return ownerEmail;
+    }
+    public void setOwnerEmail(String ownerEmail) {
+        this.ownerEmail = ownerEmail;
+    }
 	
 }

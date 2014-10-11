@@ -11,8 +11,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.datastax.driver.mapping.EntityTypeParser;
 import com.koockoo.chat.Main;
-import com.koockoo.chat.model.Auth;
 import com.koockoo.chat.model.Credentials;
+import com.koockoo.chat.model.db.Auth;
+import com.koockoo.chat.model.db.Operator;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Main.class, loader = SpringApplicationContextLoader.class)
@@ -21,14 +22,16 @@ public class AuthServiceTest {
 	@Autowired
 	AuthService target;
 	
-	@BeforeClass 
+	@BeforeClass
 	public static void init() { 
 		EntityTypeParser.remove(Auth.class);
+		EntityTypeParser.remove(Operator.class);
 	}	
 
 	@Test
 	public void testOperatorAuth() throws Exception {
-		Auth auth = target.operatorSignin("test_login", "test_pwd");
+	    
+	    Auth auth = target.operatorSignin("test_login", "test_pwd");
 		Assert.assertNull(auth);
 		
 		//create cred
@@ -59,6 +62,6 @@ public class AuthServiceTest {
 		target.signout(auth.getId());		
 				
 		// try sign in
-		Assert.assertFalse(target.authenticate(auth.getId()));
+		Assert.assertNull(target.authenticate(auth.getId()));
 	}
 }

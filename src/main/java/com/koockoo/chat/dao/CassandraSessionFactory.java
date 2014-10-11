@@ -29,7 +29,7 @@ public class CassandraSessionFactory implements InitializingBean {
             cluster = Cluster.builder().addContactPoint(node).build();
             session = cluster.connect();
             session.execute("CREATE KEYSPACE IF NOT EXISTS "+ getKeyspace() +
-                " WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 }");
+                " WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }");
         }   
     }
 	

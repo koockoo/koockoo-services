@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koockoo.chat.dao.AuthDAO;
-import com.koockoo.chat.model.Auth;
 import com.koockoo.chat.model.ChatGuest;
-import com.koockoo.chat.model.ChatOperator;
 import com.koockoo.chat.model.Credentials;
+import com.koockoo.chat.model.db.Auth;
+import com.koockoo.chat.model.db.Operator;
 
 @Service
 public class AuthService {
@@ -36,13 +36,15 @@ public class AuthService {
 		authDAO.delete(Credentials.class, login);
 	}
 	
-	public void expressRegister(String login, String password, String displayName)  {
+	public Operator expressRegister(String login, String password, String displayName, String topicRef)  {
 		Credentials cred = new Credentials(login, password);
-		ChatOperator oper = new ChatOperator();
+		Operator oper = new Operator();
 		oper.setDisplayName(displayName);
 		oper.setEmail(login);
+		oper.setTopicRef(topicRef);
 		cred.setOperatorRef(login);
 		authDAO.register(cred, oper);
+		return oper;
 	}
 	
 	public Auth operatorSignin(String login, String password) {
@@ -67,11 +69,11 @@ public class AuthService {
     }
     
 	/**
-	 * Verify that Auth is alive
+	 * Verify Auth is alive
 	 * @param token
-	 * @return true if valid Auth exists otherwise false
+	 * @return Auth or null
 	 */
-	public boolean authenticate(String token) {
+	public Auth authenticate(String token) {
 		return authDAO.extendAuth(token);
 	}	
 	

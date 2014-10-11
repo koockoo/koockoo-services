@@ -1,14 +1,12 @@
-package com.koockoo.chat.model;
+package com.koockoo.chat.model.db;
 
 import java.util.UUID;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.datastax.driver.mapping.annotation.Ttl;
 
-@Entity
 @Table(name="auth")
 @Ttl(300) /* by default expires after 5 minutes of inactivity */
 public class Auth {
@@ -17,6 +15,7 @@ public class Auth {
 	private String id = UUID.randomUUID().toString();
 	private String operatorRef;
 	private String guestRef;
+	private String topicRef;
 	
 	public String getId() {
 		return id;
@@ -41,4 +40,12 @@ public class Auth {
 	public void setGuestRef(String guestRef) {
 		this.guestRef = guestRef;
 	}
+
+    public String getTopicRef() {
+        return topicRef;
+    }
+
+    public void setTopicRef(String topicRef) {
+        this.topicRef = topicRef;
+    }
 }

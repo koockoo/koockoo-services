@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.koockoo.chat.model.ChatAccount;
 import com.koockoo.chat.model.ResponseCode;
 import com.koockoo.chat.model.ResponseWrapper;
+import com.koockoo.chat.model.db.Account;
 import com.koockoo.chat.service.AccountService;
 
 @RestController
@@ -78,25 +78,25 @@ public class AccountController {
     
     /** get account object by its id */
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
-    public ResponseWrapper<ChatAccount> getAccount(@PathVariable String id) {
+    public ResponseWrapper<Account> getAccount(@PathVariable String id) {
         try {
             log.info("in getAccount: request param id:" + id);
-            ChatAccount acc = accountService.getById(id);
-            return new ResponseWrapper<ChatAccount>(acc);
+            Account acc = accountService.getById(id);
+            return new ResponseWrapper<Account>(acc);
         } catch (Exception e) {
-            return new ResponseWrapper<ChatAccount>(ResponseCode.BAD_REQUEST, e.getMessage());
+            return new ResponseWrapper<Account>(ResponseCode.BAD_REQUEST, e.getMessage());
         }
     }    
     
     /** save entire account object */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseWrapper<ChatAccount> saveAccount(ChatAccount account) {
+    public ResponseWrapper<Account> saveAccount(Account account) {
         try {
             log.info("in saveAccount");
             account = accountService.save(account);
-            return new ResponseWrapper<ChatAccount>(account);
+            return new ResponseWrapper<Account>(account);
         } catch (Exception e) {
-            return new ResponseWrapper<ChatAccount>(ResponseCode.BAD_REQUEST, e.getMessage());
+            return new ResponseWrapper<Account>(ResponseCode.BAD_REQUEST, e.getMessage());
         }
     } 
 }
