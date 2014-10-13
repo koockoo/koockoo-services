@@ -77,4 +77,10 @@ public class AuthController {
 		// TODO: implement
 		return new ResponseWrapper<>();
 	}	
+	
+    /** to check service availability */
+    @RequestMapping(value = "ping", method = RequestMethod.GET)
+    public ResponseWrapper<String> ping() {
+        return new ResponseWrapper<>();
+    }
 }

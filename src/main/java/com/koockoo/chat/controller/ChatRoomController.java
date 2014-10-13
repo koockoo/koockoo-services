@@ -29,12 +29,6 @@ public class ChatRoomController {
     
     private static final Logger log = Logger.getLogger(ChatRoomController.class.getName());
     
-    /** Guest connects to koockoo and initializes new chatroom */
-    @RequestMapping(value = "connect", method = RequestMethod.POST)
-    public void createChatroom() {
-        
-    }
-    
     /** operator app retrieves list of pending chatrooms*/
     @RequestMapping(value = "pending", method = RequestMethod.GET)
     public ResponseWrapper<List<ChatRoomUI>> getPendingChatrooms(@RequestParam String token) {
@@ -88,4 +82,9 @@ public class ChatRoomController {
         }
     }
 
+    /** to check service availability */
+    @RequestMapping(value = "ping", method = RequestMethod.GET)
+    public ResponseWrapper<String> ping() {
+        return new ResponseWrapper<>();
+    }
 }

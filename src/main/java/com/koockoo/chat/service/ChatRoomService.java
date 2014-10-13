@@ -32,7 +32,7 @@ public class ChatRoomService {
      */
     public List<ChatRoom> getPendingChatRooms(String token) {
         Auth auth = authService.authenticate(token);
-        return getPendingChatRoomsByOperator(auth.getOperatorRef());
+        return dao.getPendingByTopic(auth.getTopicRef());
     }
 
     public List<ChatRoom> getPendingChatRoomsByOperator(String operatorId) {

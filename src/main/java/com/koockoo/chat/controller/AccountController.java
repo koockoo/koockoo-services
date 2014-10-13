@@ -24,7 +24,7 @@ public class AccountController {
     private AccountService      accountService;
 
     /** to check service availability */
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "ping", method = RequestMethod.GET)
     public ResponseWrapper<String> ping() {
         return new ResponseWrapper<>();
     }

@@ -17,7 +17,7 @@ public class AuthService {
 	private static final Logger log = Logger.getLogger(AuthService.class.getName());
 	
 	@Autowired
-	private AuthDAO authDAO; 
+	private AuthDAO dao; 
 	
 	/**
 	 * Create Credentials object for the given operator.
@@ -29,11 +29,11 @@ public class AuthService {
 	public Credentials createCredentials(String login, String password, String operatorRef)  {
 		Credentials cred = new Credentials(login, password);
 		cred.setOperatorRef(operatorRef);
-		return authDAO.save(cred);
+		return dao.save(cred);
 	}
 
 	public void deleteCredentials(String login)  {
-		authDAO.delete(Credentials.class, login);
+		dao.delete(Credentials.class, login);
 	}
 	
 	public Operator expressRegister(String login, String password, String displayName, String topicRef)  {
@@ -42,8 +42,8 @@ public class AuthService {
 		oper.setDisplayName(displayName);
 		oper.setEmail(login);
 		oper.setTopicRef(topicRef);
-		cred.setOperatorRef(login);
-		authDAO.register(cred, oper);
+		cred.setOperatorRef(oper.getId());
+		dao.register(cred, oper);
 		return oper;
 	}
 	
@@ -52,16 +52,18 @@ public class AuthService {
 		// get credentials object for current user 
 		Credentials cred = getCredentials(login, password);
 		if (cred != null) {
+		    Operator op = dao.get(Operator.class, cred.getOperatorRef());
 			// create new auth token
 			auth = new Auth();
-			auth.setOperatorRef(cred.getOperatorRef());
-			auth = authDAO.save(auth);
+			auth.setOperatorRef(op.getId());
+			auth.setTopicRef(op.getTopicRef());
+			auth = dao.save(auth);
 		}
 		return auth;
 	}	
 
     public Credentials getCredentials(String login, String password) {
-        Credentials cred = authDAO.loadCredentials(login);
+        Credentials cred = dao.loadCredentials(login);
         if (cred != null && cred.matches(login, password)) {
             return cred;
         }
@@ -74,7 +76,7 @@ public class AuthService {
 	 * @return Auth or null
 	 */
 	public Auth authenticate(String token) {
-		return authDAO.extendAuth(token);
+		return dao.extendAuth(token);
 	}	
 	
 	/**
@@ -86,16 +88,16 @@ public class AuthService {
 	public Auth guestSignin(String displayName) {
 		ChatGuest guest = new ChatGuest();
 		guest.setDisplayName(displayName);
-		authDAO.save(guest);
+		dao.save(guest);
 		Auth auth = new Auth();
 		auth.setGuestRef(guest.getId());
-		authDAO.save(auth);		
+		dao.save(auth);		
 		return auth;
 	}	
 	
 	public void signout(String id) {
 		try {
-			authDAO.delete(Auth.class, id);
+			dao.delete(Auth.class, id);
 		} catch (Exception e) {
 			log.info("Skip. Exception thrown on delete Auth:"+id);
 		}
