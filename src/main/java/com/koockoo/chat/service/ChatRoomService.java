@@ -1,6 +1,5 @@
 package com.koockoo.chat.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import com.koockoo.chat.model.db.Auth;
 import com.koockoo.chat.model.db.ChatRoom;
 import com.koockoo.chat.model.db.Guest;
 import com.koockoo.chat.model.db.Operator;
-import com.koockoo.chat.model.ui.ChatRoomUI;
-import com.koockoo.chat.model.ui.GuestUI;
 
 @Service
 public class ChatRoomService {

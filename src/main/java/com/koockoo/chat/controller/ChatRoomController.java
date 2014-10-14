@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.koockoo.chat.model.ResponseCode;
 import com.koockoo.chat.model.ResponseWrapper;
-import com.koockoo.chat.model.db.Auth;
 import com.koockoo.chat.model.db.ChatRoom;
 import com.koockoo.chat.model.ui.ChatRoomUI;
 import com.koockoo.chat.service.ChatRoomService;
@@ -70,12 +69,12 @@ public class ChatRoomController {
     
     /** operator accepts chatroom converstaion */
     /** operator app retrieves list of pending chatrooms*/
-    @RequestMapping(value = "accept", method = RequestMethod.GET)
-    public ResponseWrapper<ChatRoomUI> acceptChatroom(@RequestParam String roomRef, @RequestParam String operatorId) {
+    @RequestMapping(value = "accept", method = RequestMethod.POST)
+    public ResponseWrapper<ChatRoomUI> acceptChatroom(@RequestParam String roomId, @RequestParam String operatorId) {
         try {
-            log.info("accepting chatroom: "+ roomRef);
-            ChatRoom r  = service.acceptChatRoom(roomRef, operatorId);
-            log.info("chatroom accepted: "+ roomRef);
+            log.info("accepting chatroom: "+ roomId);
+            ChatRoom r  = service.acceptChatRoom(roomId, operatorId);
+            log.info("chatroom accepted: "+ roomId);
             return new ResponseWrapper<>(convertor.chatRoomToUI(r));
         } catch (Exception e) {
             return new ResponseWrapper<>(ResponseCode.INTERNAL_ERROR, e.getMessage());

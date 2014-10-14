@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.koockoo.chat.model.ResponseCode;
 import com.koockoo.chat.model.ResponseWrapper;
 import com.koockoo.chat.model.db.Auth;
+import com.koockoo.chat.model.ui.AuthUI;
 import com.koockoo.chat.service.AuthService;
+import com.koockoo.chat.service.ModelConvertor;
 
 @RestController
 @RequestMapping(value = "**/auth")
@@ -22,44 +24,49 @@ public class AuthController {
 	@Autowired
 	AuthService authService;
 	
+    @Autowired
+    ModelConvertor convertor;
+	
 	/** Operator Signin with credentials */
 	@RequestMapping(value = "signin/operator", method = RequestMethod.POST)
-	public ResponseWrapper<Auth> operatorSignin(@RequestParam String login, @RequestParam String password) {
+	public ResponseWrapper<AuthUI> operatorSignin(@RequestParam String login, @RequestParam String password) {
 	    log.info("operator login attempt by : "+login);
-		Auth auth = null;
+		AuthUI auth = null;
 		try {
-			auth = authService.operatorSignin(login, password); 
+			Auth e = authService.operatorSignin(login, password); 
+			auth = convertor.authToUI(e);
 		} catch (Exception e) {
 		    log.info("operator login unexpected error : "+login);
-			return new ResponseWrapper<Auth>(ResponseCode.INTERNAL_ERROR, e.getMessage());
+			return new ResponseWrapper<AuthUI>(ResponseCode.INTERNAL_ERROR, e.getMessage());
 		}
 		if (auth == null) {
 		    log.info("operator login invalid by : "+login);
-			return new ResponseWrapper<Auth>(ResponseCode.INVALID_CREDENTIALS, "Invalid email or password"); 
+			return new ResponseWrapper<AuthUI>(ResponseCode.INVALID_CREDENTIALS, "Invalid email or password"); 
 		}
 		log.info("operator login success by : "+login);
-		return new ResponseWrapper<Auth>(auth);
+		return new ResponseWrapper<AuthUI>(auth);
 	}
 	
 	/** Guest Signin with name */
 	@RequestMapping(value = "signin/guest", method = RequestMethod.POST)
-	public ResponseWrapper<Auth> guestSignin(@RequestParam String displayName) {
-		Auth auth = null;
+	public ResponseWrapper<AuthUI> guestSignin(@RequestParam String displayName) {
+	    AuthUI auth = null;
 		try {
-			auth = authService.guestSignin(displayName); 
+	          Auth e = authService.guestSignin(displayName);  
+	          auth = convertor.authToUI(e);
 		} catch (Exception e) {
-			return new ResponseWrapper<Auth>(ResponseCode.INTERNAL_ERROR, e.getMessage());
+			return new ResponseWrapper<AuthUI>(ResponseCode.INTERNAL_ERROR, e.getMessage());
 		}
-		return new ResponseWrapper<Auth>(auth);
+		return new ResponseWrapper<AuthUI>(auth);
 	}	
 	
-	/** Signout. Invalidates auth */
+	/** Signout. Invalidate auth */
 	@RequestMapping(value = "signout", method = RequestMethod.POST)
 	public ResponseWrapper<String> signout(@RequestParam String authId) {
 		try {
 			authService.signout(authId);
 		} catch (Exception e) {
-			// ignore
+			// ignore, who cares
 		}
 		return new ResponseWrapper<>();
 	}	
