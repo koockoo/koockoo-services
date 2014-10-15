@@ -47,7 +47,9 @@ public class ChatRoomService {
         ChatRoom r = dao.get(roomRef);
         r.setState(ChatRoom.States.ACTIVE);
         r.addOperatorRef(operatorRef);
-        return dao.save(r);
+        r = dao.save(r);
+        dao.appendAsync(operatorRef, Operator.class, "chatRoomRefs", r.getId());
+        return r;
     }    
 
     /**
@@ -65,6 +67,8 @@ public class ChatRoomService {
         r.setTopicRef(topicRef);
         dao.save(r);
 
+        dao.updateValueAsync(g.getId(), Guest.class, "chatRoomRef", r.getId());
+
         return r;
     }
 
@@ -74,11 +78,20 @@ public class ChatRoomService {
     public void closeChatRoom(String roomRef) {
         ChatRoom r = dao.get(roomRef);
         r.setState(ChatRoom.States.CLOSED);
-        dao.save(r);
+        dao.saveAsync(r);
+        if (r.getOperatorRefs() != null) {
+            for (String ref: r.getOperatorRefs()) {
+                dao.removeAsync(ref, Operator.class, "chatRoomRefs", roomRef);
+            }
+        }
+        
+        if (r.getGuestRef() != null) {
+            dao.deleteValueAsync(r.getGuestRef(), Guest.class, "chatRoomRef");
+        }
     }
   
     /**
-     * Close ChatRoom, no more messages are allowed on this chatroom.
+     * Get ChatRoom
      */
     public ChatRoom getChatRoom(String roomRef) {
         return dao.get(roomRef); 

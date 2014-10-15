@@ -19,6 +19,7 @@ import com.koockoo.chat.model.Credentials;
 import com.koockoo.chat.model.db.Account;
 import com.koockoo.chat.model.db.Auth;
 import com.koockoo.chat.model.db.ChatRoom;
+import com.koockoo.chat.model.db.Guest;
 import com.koockoo.chat.model.db.Operator;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -52,7 +53,7 @@ public class ChatRoomServiceTest {
             SchemaSync.drop(sf.getKeyspace(), sf.getSession(), Credentials.class);
             SchemaSync.drop(sf.getKeyspace(), sf.getSession(), Auth.class);
             SchemaSync.drop(sf.getKeyspace(), sf.getSession(), ChatRoom.class);
-            SchemaSync.drop(sf.getKeyspace(), sf.getSession(), ChatRoom.class);
+            SchemaSync.drop(sf.getKeyspace(), sf.getSession(), Guest.class);
         } catch (Exception e) {}
         
         account = accountService.expressRegister(operatorEmail, operatorPwd, operatorName);

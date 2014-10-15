@@ -1,7 +1,10 @@
 package com.koockoo.chat.service;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +13,12 @@ import com.koockoo.chat.dao.CommonDAO;
 import com.koockoo.chat.model.db.Auth;
 import com.koockoo.chat.model.db.ChatRoom;
 import com.koockoo.chat.model.db.Guest;
+import com.koockoo.chat.model.db.Message;
 import com.koockoo.chat.model.db.Operator;
 import com.koockoo.chat.model.ui.AuthUI;
 import com.koockoo.chat.model.ui.ChatRoomUI;
 import com.koockoo.chat.model.ui.GuestUI;
+import com.koockoo.chat.model.ui.MessageUI;
 import com.koockoo.chat.model.ui.OperatorUI;
 
 /***
@@ -78,7 +83,40 @@ public class ModelConvertor {
             Guest g = dao.get(Guest.class, e.getGuestRef());
             a.setGuest(guestToUI(g));
         }
-        
         return a;
+    }
+   
+    public Map<String, List<MessageUI>> messagesToUI(Map<String, List<Message>> map) {
+        if (map == null) return null;
+        Map<String, List<MessageUI>> result = new HashMap<String, List<MessageUI>>();
+        for (String roomId: map.keySet()) {
+            result.put(roomId, messagesToUI(map.get(roomId)));
+        }
+        return result;
+    }
+    
+    public List<MessageUI> messagesToUI(List<Message> ms) {
+        if (ms == null) return null;
+        List<MessageUI> result = new ArrayList<>();
+        for (Message m: ms) {
+            result.add(messageToUI(m));
+        }
+        return result;
+    }
+    
+    public MessageUI messageToUI(Message e) {
+        MessageUI m = new MessageUI();
+        m.setAuthorRef(e.getAuthorRef());
+        m.setAuthorType(e.getAuthorType());
+        m.setText(e.getText());
+        m.setTimestamp(new Date(e.getKey().getId().timestamp()));
+        String name = "";
+        if (e.getAuthorType() == 0) {
+            name  = dao.get(Guest.class, e.getAuthorRef()).getDisplayName();
+        } else {
+            name  = dao.get(Operator.class, e.getAuthorRef()).getDisplayName();
+        }
+        m.setAuthorName(name);
+        return m;
     }
 }

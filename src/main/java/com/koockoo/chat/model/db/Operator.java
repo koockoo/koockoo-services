@@ -1,5 +1,6 @@
 package com.koockoo.chat.model.db;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ public class Operator {
     private String displayName;
     private String email;
     private String topicRef;
+    private List<String> chatRoomRefs;
 
     public String getEmail() {
         return email;
@@ -47,5 +49,13 @@ public class Operator {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<String> getChatRoomRefs() {
+        return chatRoomRefs;
+    }
+
+    public void setChatRoomRefs(List<String> chatRoomRefs) {
+        this.chatRoomRefs = chatRoomRefs;
     }
 }

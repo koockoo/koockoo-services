@@ -14,6 +14,7 @@ public class Guest {
     private String topicRef;
     private String location;
     private String env;
+    private String chatRoomRef;
     
     public String getDisplayName() {
         return displayName;
@@ -53,5 +54,13 @@ public class Guest {
 
     public void setEnv(String env) {
         this.env = env;
+    }
+
+    public String getChatRoomRef() {
+        return chatRoomRef;
+    }
+
+    public void setChatRoomRef(String chatRoomRef) {
+        this.chatRoomRef = chatRoomRef;
     }
 }
