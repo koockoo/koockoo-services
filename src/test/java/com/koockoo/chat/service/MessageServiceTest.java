@@ -1,7 +1,6 @@
 package com.koockoo.chat.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -82,44 +81,39 @@ public class MessageServiceTest {
         target.publishMessage(guest, 0, room1.getId(), "message1");
         sleep(1000);
         
-        Map<String, List<Message>> opMsgs = target.readMessagesByOperator(oper, null);
-        Message last = opMsgs.get(room1.getId()).get(0);
-        Assert.assertEquals(1, opMsgs.keySet().size());
-        Assert.assertEquals(1, opMsgs.get(room1.getId()).size());
+        List<Message> opMsgs = target.readMessagesByOperator(oper, null);
+        Message last = opMsgs.get(opMsgs.size()-1);
+        Assert.assertEquals(1, opMsgs.size());
         
         // guest publishes the second message
         target.publishMessage(guest, 0, room1.getId(), "message2");
         sleep(1000);
         
-        // no cut-off, operator reads 2 messages
+        // no cut-off, operator reads 2 guest messages
         opMsgs = target.readMessagesByOperator(oper, null);
-        Assert.assertEquals(1, opMsgs.keySet().size());
-        Assert.assertEquals(2, opMsgs.get(room1.getId()).size());
+        Assert.assertEquals(2, opMsgs.size());
 
         // cut-off, operator reads 1 message        
         opMsgs = target.readMessagesByOperator(oper, last.getKey().getId());
-        Assert.assertEquals(1, opMsgs.keySet().size());
-        Assert.assertEquals(1, opMsgs.get(room1.getId()).size());
+        Assert.assertEquals(1, opMsgs.size());
         
         // operator publishes the second message
         target.publishMessage(oper, 1, room1.getId(), "message3");
         sleep(1000);       
         
-        // no cut-off, operator reads all 3 messages        
+        // no cut-off, operator reads 2 guest messages        
         opMsgs = target.readMessagesByOperator(oper, null);
-        Assert.assertEquals(1, opMsgs.keySet().size());
-        Assert.assertEquals(3, opMsgs.get(room1.getId()).size());
+        Assert.assertEquals(2, opMsgs.size());
         
-        // cut-off, operator reads 2 messages     
+        // cut-off, operator reads 1 message    
         opMsgs = target.readMessagesByOperator(oper, last.getKey().getId());
-        Assert.assertEquals(1, opMsgs.keySet().size());
-        Assert.assertEquals(2, opMsgs.get(room1.getId()).size());
+        Assert.assertEquals(1, opMsgs.size());
         
         List<Message> gMsgs = target.readMessagesByGuest(guest, null);
-        Assert.assertEquals(3, gMsgs.size());
+        Assert.assertEquals(1, gMsgs.size());
 
         gMsgs = target.readMessagesByGuest(guest, last.getKey().getId());
-        Assert.assertEquals(2, gMsgs.size());
+        Assert.assertEquals(1, gMsgs.size());
         
         // guest 2 opens chatroom
         
@@ -137,11 +131,9 @@ public class MessageServiceTest {
         target.publishMessage(guest2, 0, room2.getId(), "message4");
         sleep(1000);       
         
-        // cut-off, operator reads 3 messages     
+        // cut-off, operator reads 2 messages     
         opMsgs = target.readMessagesByOperator(oper, last.getKey().getId());
-        Assert.assertEquals(2, opMsgs.keySet().size());
-        Assert.assertEquals(2, opMsgs.get(room1.getId()).size());
-        Assert.assertEquals(1, opMsgs.get(room2.getId()).size());
+        Assert.assertEquals(2, opMsgs.size());
         
         // close chat room 
         chatRoomService.closeChatRoom(room1.getId());

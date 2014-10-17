@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class MessageUI {
     
+    private String id;
+    private String chatRoomId;
     private String authorRef;
     private int authorType = 0; //0- guest, 1- operator
     private String authorName;
@@ -45,5 +47,21 @@ public class MessageUI {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getChatRoomId() {
+        return chatRoomId;
+    }
+
+    public void setChatRoomId(String chatRoomId) {
+        this.chatRoomId = chatRoomId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

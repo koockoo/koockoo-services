@@ -2,9 +2,7 @@ package com.koockoo.chat.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,15 +84,6 @@ public class ModelConvertor {
         return a;
     }
    
-    public Map<String, List<MessageUI>> messagesToUI(Map<String, List<Message>> map) {
-        if (map == null) return null;
-        Map<String, List<MessageUI>> result = new HashMap<String, List<MessageUI>>();
-        for (String roomId: map.keySet()) {
-            result.put(roomId, messagesToUI(map.get(roomId)));
-        }
-        return result;
-    }
-    
     public List<MessageUI> messagesToUI(List<Message> ms) {
         if (ms == null) return null;
         List<MessageUI> result = new ArrayList<>();
@@ -106,6 +95,8 @@ public class ModelConvertor {
     
     public MessageUI messageToUI(Message e) {
         MessageUI m = new MessageUI();
+        m.setId(e.getKey().getId().toString());
+        m.setChatRoomId(e.getKey().getChatRoomId());
         m.setAuthorRef(e.getAuthorRef());
         m.setAuthorType(e.getAuthorType());
         m.setText(e.getText());

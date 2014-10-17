@@ -1,9 +1,7 @@
 package com.koockoo.chat.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,7 @@ public class MessageService {
     MessageDAO dao;
 
     /** Build and save a Message asynchronously */
-    public void publishMessage(String authorRef, int authorType, String chatRoomId, String text) {
+    public Message publishMessage(String authorRef, int authorType, String chatRoomId, String text) {
         MessageKey key = new MessageKey();
         key.setChatRoomId(chatRoomId);
         Message m = new Message();
@@ -31,31 +29,26 @@ public class MessageService {
         m.setAuthorRef(authorRef);
         m.setAuthorType(authorType);
         dao.saveAsync(m);
+        return m;
     }
 
-    /** Read messages from subscribers queue */
-    public List<Message> readMessages(UUID lastMsgId, String[] chatRooms) {
-        return dao.queryUnreadMessages(lastMsgId, chatRooms);
+ 
+    /** Read messages from a chatroom */
+    public List<Message> readMessages(UUID lastMsgId, String chatRoomId) {
+        return readMessages(lastMsgId, chatRoomId, null);
     }
 
-    /**
-     * Operator reads message for all chatrooms.
-     */
-    public Map<String, List<Message>> readMessagesByOperator(String operatorId, UUID lastMsgId) {
-        Map<String, List<Message>> messages = new HashMap<String, List<Message>>();
-        Operator op = dao.get(Operator.class, operatorId);
-        String[] chatRooms = op.getChatRoomRefs().toArray(new String[op.getChatRoomRefs().size()]);
-        List<Message> all = readMessages(lastMsgId, chatRooms);
-        if (all != null) {
-            for (Message m : all) {
-                String roomId = m.getKey().getChatRoomId();
-                List<Message> roomMessages = messages.get(roomId);
-                if (roomMessages == null) {
-                    roomMessages = new ArrayList<>();
-                    messages.put(roomId, roomMessages);
-                }
-                roomMessages.add(m);
-            }
+    /** Read messages from a chatroom, excluding author */
+    public List<Message> readMessages(UUID lastMsgId, String chatRoomId, String excludeAuthor) {
+        String[] chatRooms = {chatRoomId};
+        return readMessages(lastMsgId, chatRooms, excludeAuthor);
+    }
+ 
+    /** Read messages from chatrooms  */
+    public List<Message> readMessages(UUID lastMsgId, String[] chatRooms, String excludeAuthor) {
+        List<Message> messages = dao.queryUnreadMessages(lastMsgId, chatRooms);
+        if (excludeAuthor != null && messages != null) {
+            messages = removeAuthorMessages(excludeAuthor, messages);
         }
         return messages;
     }
@@ -63,10 +56,27 @@ public class MessageService {
     /**
      * Operator reads message for all chatrooms.
      */
+    public List<Message> readMessagesByOperator(String operatorId, UUID lastMsgId) {
+        Operator op = dao.get(Operator.class, operatorId);
+        String[] chatRooms = op.getChatRoomRefs().toArray(new String[op.getChatRoomRefs().size()]);
+        return readMessages(lastMsgId, chatRooms, operatorId);
+    }
+
+    /**
+     * Guest reads message for all chatrooms.
+     */
     public List<Message> readMessagesByGuest(String guestId, UUID lastMsgId) {
         Guest g = dao.get(Guest.class, guestId);
-        String[] refs = new String[1];
-        refs[0] = g.getChatRoomRef();
-        return readMessages(lastMsgId, refs);
+        return readMessages(lastMsgId, g.getChatRoomRef(), guestId);
+    }
+    
+    private List<Message> removeAuthorMessages(String authorId, List<Message> msgs) {
+        for (Iterator<Message> it = msgs.iterator(); it.hasNext();) {
+            Message m = it.next();
+            if (m.getAuthorRef().equals(authorId)) {
+                it.remove();
+            }
+        }
+        return msgs;
     }
 }
