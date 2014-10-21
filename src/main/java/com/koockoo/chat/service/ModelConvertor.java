@@ -1,8 +1,8 @@
 package com.koockoo.chat.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,16 @@ import com.koockoo.chat.model.ui.ChatRoomUI;
 import com.koockoo.chat.model.ui.GuestUI;
 import com.koockoo.chat.model.ui.MessageUI;
 import com.koockoo.chat.model.ui.OperatorUI;
+import com.koockoo.chat.util.DateUtil;
 
 /***
  * Convert DB models into UI and back
  */
 @Service
 public class ModelConvertor {
+    
+    private static final Logger log = Logger.getLogger(ModelConvertor.class.getName());
+    
     
     @Autowired
     CommonDAO dao;
@@ -94,13 +98,14 @@ public class ModelConvertor {
     }
     
     public MessageUI messageToUI(Message e) {
+        String utcDate = DateUtil.timeUUID2ISOString(e.getKey().getId());
         MessageUI m = new MessageUI();
         m.setId(e.getKey().getId().toString());
         m.setChatRoomId(e.getKey().getChatRoomId());
         m.setAuthorRef(e.getAuthorRef());
         m.setAuthorType(e.getAuthorType());
         m.setText(e.getText());
-        m.setTimestamp(new Date(e.getKey().getId().timestamp()));
+        m.setUtcDateTime(utcDate);
         String name = "";
         if (e.getAuthorType() == 0) {
             name  = dao.get(Guest.class, e.getAuthorRef()).getDisplayName();

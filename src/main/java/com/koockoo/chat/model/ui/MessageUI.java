@@ -1,6 +1,5 @@
 package com.koockoo.chat.model.ui;
 
-import java.util.Date;
 
 public class MessageUI {
     
@@ -10,8 +9,8 @@ public class MessageUI {
     private int authorType = 0; //0- guest, 1- operator
     private String authorName;
     private String text;
-    private Date timestamp; //timeuuid representation for UI. Derived from id. 
-
+    private String utcDateTime; // ISO formatted time
+    
     public String getText() {
         return text;
     }
@@ -41,14 +40,6 @@ public class MessageUI {
         this.authorName = authorName;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public String getChatRoomId() {
         return chatRoomId;
     }
@@ -63,5 +54,13 @@ public class MessageUI {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUtcDateTime() {
+        return utcDateTime;
+    }
+
+    public void setUtcDateTime(String utcDateTime) {
+        this.utcDateTime = utcDateTime;
     }
 }

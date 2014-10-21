@@ -6,9 +6,9 @@ import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.koockoo.chat.model.ResponseCode;
@@ -58,7 +58,7 @@ public class MessageController {
             log.info("read messages by operator " + operatorId + " after:" + lastMsgId);
             List<Message> ms = messageService.readMessagesByOperator(operatorId, lastMsgId);
             List<MessageUI> result = convertor.messagesToUI(ms);
-            log.info("retrieved messages by operator " + operatorId);
+            log.info("retrieved " + result.size() + " messages by operator " + operatorId);
             return new ResponseWrapper<List<MessageUI>>(result);
         } catch (Exception e) {
             return new ResponseWrapper<List<MessageUI>>(ResponseCode.BAD_REQUEST, e.getMessage());
@@ -75,7 +75,7 @@ public class MessageController {
     
      /** Post a new message */
      @RequestMapping(value = "/guest/{authorId}/chatroom/{chatRoomId}", method = RequestMethod.POST)
-     public ResponseWrapper<MessageUI> postMessageByGuest(@PathVariable String authorId, @PathVariable String chatRoomId, @RequestBody String text) {
+     public ResponseWrapper<MessageUI> postMessageByGuest(@PathVariable String authorId, @PathVariable String chatRoomId, @RequestParam String text) {
          try {
              log.info("post message by guest "+authorId);
              Message m = messageService.publishMessage(authorId, 0, chatRoomId, text);
@@ -87,7 +87,7 @@ public class MessageController {
 
      /** Post a new message */
      @RequestMapping(value = "/operator/{authorId}/chatroom/{chatRoomId}", method = RequestMethod.POST)
-     public ResponseWrapper<MessageUI> postMessageByOperator(@PathVariable String authorId, @PathVariable String chatRoomId, @RequestBody String text) {
+     public ResponseWrapper<MessageUI> postMessageByOperator(@PathVariable String authorId, @PathVariable String chatRoomId, @RequestParam String text) {
          try {
              log.info("post message by operator "+authorId);
              Message m = messageService.publishMessage(authorId, 1, chatRoomId, text);
