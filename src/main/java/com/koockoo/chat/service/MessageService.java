@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koockoo.chat.dao.MessageDAO;
+import com.koockoo.chat.model.db.ChatRoom;
 import com.koockoo.chat.model.db.Guest;
 import com.koockoo.chat.model.db.Message;
 import com.koockoo.chat.model.db.MessageKey;
@@ -29,6 +30,7 @@ public class MessageService {
         m.setAuthorRef(authorRef);
         m.setAuthorType(authorType);
         dao.saveAsync(m);
+        dao.updateValueAsync(chatRoomId, ChatRoom.class, "id", chatRoomId); // to keep alive (refresh TTL)
         return m;
     }
 

@@ -20,6 +20,7 @@ public class Account {
 	private String ownerRef;
 	private String ownerEmail;
 	private String topicRef;
+	private int ttl = 300;
 	
 	@Transient
 	private Operator owner;
@@ -53,6 +54,12 @@ public class Account {
     }
     public void setOwnerEmail(String ownerEmail) {
         this.ownerEmail = ownerEmail;
+    }
+    public int getTtl() {
+        return ttl;
+    }
+    public void setTtl(int ttl) {
+        this.ttl = ttl;
     }
 	
 }
