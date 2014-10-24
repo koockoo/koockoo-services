@@ -16,7 +16,7 @@ import com.datastax.driver.mapping.annotation.Ttl;
         @Index(name="chatroom_topic_idx", columnList="topicRef" ),
         @Index(name="chatroom_state_idx", columnList="state" )
 })
-@Ttl(3600*24) // 24 hrs
+@Ttl(300)
 public class ChatRoom {
     public static enum States {PENDING, ACTIVE, CLOSED}
     

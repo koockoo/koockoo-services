@@ -3,6 +3,9 @@ package com.koockoo.chat.model.db;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Table;
 
+import com.datastax.driver.mapping.annotation.Ttl;
+
+@Ttl(300)
 @Table(name="messages")
 public class Message implements Comparable<Message> {
     
