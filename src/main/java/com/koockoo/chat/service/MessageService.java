@@ -30,7 +30,8 @@ public class MessageService {
         m.setAuthorRef(authorRef);
         m.setAuthorType(authorType);
         dao.saveAsync(m);
-        dao.updateValueAsync(chatRoomId, ChatRoom.class, "id", chatRoomId); // to keep alive (refresh TTL)
+        ChatRoom r = dao.get(ChatRoom.class, chatRoomId);
+        dao.saveAsync(r); // to keep alive (refresh TTL)
         return m;
     }
 
