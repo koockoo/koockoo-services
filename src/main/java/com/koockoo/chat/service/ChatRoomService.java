@@ -38,6 +38,23 @@ public class ChatRoomService {
         return rooms;
     }
 
+
+    /**
+     * Retrieve all active conversations for operator 
+     */
+    public List<ChatRoom> getActiveChatRooms(String token) {
+        Auth auth = authService.authenticate(token);
+        return getActiveChatRoomsByOperator(auth.getOperatorRef());
+    }    
+
+    /**
+     * Retrieve all active conversations for operator 
+     */
+    public List<ChatRoom> getActiveChatRoomsByOperator(String operatorRef) {
+        Operator oper = dao.get(Operator.class, operatorRef);
+        return dao.getActiveByOperator(oper);
+    } 
+    
     /**
      * Open ChatRoom this will open a new ChatRoom. 
      * 1. Create a guest which requests communication 
@@ -48,6 +65,9 @@ public class ChatRoomService {
         r.setState(ChatRoom.States.ACTIVE);
         r.addOperatorRef(operatorRef);
         r = dao.save(r);
+        
+        // append active room ref to operator. will be removed whenever client exits chat
+        // in case of unexpected issue clean up will be done by other operations 
         dao.appendAsync(operatorRef, Operator.class, "chatRoomRefs", r.getId());
         return r;
     }    

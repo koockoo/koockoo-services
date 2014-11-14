@@ -76,6 +76,9 @@ public class ChatRoomServiceTest {
         room1 = target.acceptChatRoom(room1.getId(), account.getOwnerRef());
         Assert.assertEquals(room1.getState(), ChatRoom.States.ACTIVE);
         Assert.assertEquals(room1.getOperatorRefs().get(0), account.getOwnerRef());
+
+        rooms = target.getActiveChatRoomsByOperator(account.getOwnerRef());
+        Assert.assertEquals(1, rooms.size());
         
         // close chat room 
         target.closeChatRoom(room1.getId());
@@ -86,5 +89,8 @@ public class ChatRoomServiceTest {
         rooms = target.getPendingChatRoomsByOperator(account.getOwnerRef());
         Assert.assertEquals(1, rooms.size());
         Assert.assertEquals(rooms.get(0).getState(), ChatRoom.States.PENDING);
+        
+        rooms = target.getActiveChatRoomsByOperator(account.getOwnerRef());
+        Assert.assertEquals(0, rooms.size());
     }
 }

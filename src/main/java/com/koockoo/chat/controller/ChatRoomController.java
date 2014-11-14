@@ -32,7 +32,7 @@ public class ChatRoomController {
     @RequestMapping(value = "pending", method = RequestMethod.GET)
     public ResponseWrapper<List<ChatRoomUI>> getPendingChatrooms(@RequestParam String token) {
         try {
-            log.info("Retrieve peding for token:"+ token);
+            log.info("Retrieve peding rooms for token:"+ token);
             List<ChatRoom> pending  = service.getPendingChatRooms(token);
             log.info("Retrieved "+pending.size()+ " peding for token:"+ token);
             return new ResponseWrapper<>(convertor.chatRoomsToUI(pending));
@@ -40,7 +40,20 @@ public class ChatRoomController {
             return new ResponseWrapper<>(ResponseCode.INTERNAL_ERROR, e.getMessage());
         }
     }
- 
+    
+    /** operator app retrieves list of active chatrooms*/
+    @RequestMapping(value = "active", method = RequestMethod.GET)
+    public ResponseWrapper<List<ChatRoomUI>> getActiveChatrooms(@RequestParam String token) {
+        try {
+            log.info("Retrieve active rooms for token:"+ token);
+            List<ChatRoom> active  = service.getActiveChatRooms(token);
+            log.info("Retrieved "+active.size()+ " active for token:"+ token);
+            return new ResponseWrapper<>(convertor.chatRoomsToUI(active));
+        } catch (Exception e) {
+            return new ResponseWrapper<>(ResponseCode.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+    
     /** guest opens a new chatroom*/
     @RequestMapping(value = "open", method = RequestMethod.GET)
     public ResponseWrapper<ChatRoomUI> openChatroom(@RequestParam String displayName, @RequestParam String topicRef) {
