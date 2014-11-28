@@ -81,7 +81,6 @@ public class ChatRoomController {
     } 
     
     /** operator accepts chatroom converstaion */
-    /** operator app retrieves list of pending chatrooms*/
     @RequestMapping(value = "accept", method = RequestMethod.POST)
     public ResponseWrapper<ChatRoomUI> acceptChatroom(@RequestParam String roomId, @RequestParam String operatorId) {
         try {

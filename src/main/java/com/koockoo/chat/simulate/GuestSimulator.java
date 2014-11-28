@@ -28,7 +28,7 @@ public class GuestSimulator extends Thread {
     @Autowired
     CommonDAO                       dao;
 
-    private String                  topicRef = "50d96f99-16c4-4ecf-a3bb-3a98b008e817";
+    private String topicRef = "50d96f99-16c4-4ecf-a3bb-3a98b008e817";
 
     public GuestSimulator() {
     }
