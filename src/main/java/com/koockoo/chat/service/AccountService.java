@@ -88,7 +88,8 @@ public class AccountService {
 		return 
 			"<script type='text/javascript' src='http://koockoo.com/client/js/koockoo.js'/>\n"+
 			"<script type='text/javascript'>\n"+
-			"    var _koockoo = {'id':'"+accountId+"'};\n"+
+			"    var koockoo =  koockoo ||{};\n"+
+			"    koockoo.id='"+accountId+"'};\n"+
 			"</script>";
 	}
 }

@@ -66,7 +66,7 @@ public class MessageServiceTest {
     @Test
     public void emulateChatRoomConversation() throws Exception {
         // open chat room
-        ChatRoom room1 = chatRoomService.openChatRoom(guestName, account.getTopicRef());
+        ChatRoom room1 = chatRoomService.openChatRoomByTopic(guestName, account.getTopicRef());
         String guest = room1.getGuestRef(); 
         String oper = account.getOwnerRef();
         
@@ -117,7 +117,7 @@ public class MessageServiceTest {
         
         // guest 2 opens chatroom
         
-        ChatRoom room2 = chatRoomService.openChatRoom(guestName, account.getTopicRef());
+        ChatRoom room2 = chatRoomService.openChatRoomByTopic(guestName, account.getTopicRef());
         String guest2 = room2.getGuestRef(); 
         
         // get pending chat room

@@ -73,25 +73,43 @@ public class ChatRoomService {
     }    
 
     /**
-     * Open ChatRoom this will open a new ChatRoom. 
+     * Open ChatRoom for the topic. This will 
      * 1. Create a guest which requests communication 
      * 2. Create a ChatRoom
      */
-    public ChatRoom openChatRoom(String displayName, String topicRef) {
+    public ChatRoom openChatRoomByTopic(String displayName, String topicRef) {
         Guest g = new Guest();
         g.setDisplayName(displayName);
         dao.save(g);
-
-        ChatRoom r = new ChatRoom();
-        r.setGuestRef(g.getId());
-        r.setTopicRef(topicRef);
-        dao.save(r);
-
-        dao.updateValueAsync(g.getId(), Guest.class, "chatRoomRef", r.getId());
-
-        return r;
+        return createChatRoom(topicRef, g.getId());
     }
 
+    /**
+     * open chatroom by the token. The guest is already registered.
+     * all required data will be retrieved from auth token.
+     * @param token - auth ref
+     * @return ChatRoom
+     */
+    public ChatRoom openChatRoomByToken(String token) {
+        Auth auth = authService.authenticate(token);
+        return createChatRoom(auth.getTopicRef(), auth.getGuestRef());
+    }
+    
+    /**
+     * open chatroom by the token. The guest is already registered.
+     * all required data will be retrieved from auth token.
+     * @param token - auth ref
+     * @return ChatRoom
+     */
+    public ChatRoom createChatRoom(String topicRef, String guestRef) {
+        ChatRoom r = new ChatRoom();
+        r.setGuestRef(guestRef);
+        r.setTopicRef(topicRef);
+        r = dao.save(r);
+        dao.updateValueAsync(guestRef, Guest.class, "chatRoomRef", r.getId());
+        return r;
+    }
+    
     /**
      * Close ChatRoom, no more messages are allowed on this chatroom.
      */

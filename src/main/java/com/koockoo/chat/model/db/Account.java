@@ -21,6 +21,7 @@ public class Account {
 	private String ownerEmail;
 	private String topicRef;
 	private int ttl = 300;
+	private String locale;
 	
 	@Transient
 	private Operator owner;
@@ -60,6 +61,12 @@ public class Account {
     }
     public void setTtl(int ttl) {
         this.ttl = ttl;
+    }
+    public String getLocale() {
+        return locale;
+    }
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 	
 }

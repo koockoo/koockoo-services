@@ -62,8 +62,8 @@ public class ChatRoomServiceTest {
     @Test
     public void emulateChatRoomLifecicle() throws Exception {
         // open chat room
-        ChatRoom room1 = target.openChatRoom(guestName, account.getTopicRef());
-        ChatRoom room2 = target.openChatRoom(guestName, account.getTopicRef());
+        ChatRoom room1 = target.openChatRoomByTopic(guestName, account.getTopicRef());
+        ChatRoom room2 = target.openChatRoomByTopic(guestName, account.getTopicRef());
         Assert.assertEquals(room1.getState(), ChatRoom.States.PENDING);
         Assert.assertEquals(room2.getState(), ChatRoom.States.PENDING);
         

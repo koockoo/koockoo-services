@@ -56,11 +56,11 @@ public class ChatRoomController {
     
     /** guest opens a new chatroom*/
     @RequestMapping(value = "open", method = RequestMethod.GET)
-    public ResponseWrapper<ChatRoomUI> openChatroom(@RequestParam String displayName, @RequestParam String topicRef) {
+    public ResponseWrapper<ChatRoomUI> openChatroom(@RequestParam String token) {
         try {
-            log.info("opening chatroom for topic:"+ topicRef +" by:"+displayName);
-            ChatRoom r = service.openChatRoom(displayName, topicRef);
-            log.info("chatroom opened for topic:"+ topicRef +" by:"+displayName);
+            log.info("opening chatroom for token:"+ token);
+            ChatRoom r = service.openChatRoomByToken(token);
+            log.info("chatroom opened for topic:"+ r.getTopicRef() +" by:"+r.getGuestRef());
             return new ResponseWrapper<>(convertor.chatRoomToUI(r));
         } catch (Exception e) {
             return new ResponseWrapper<>(ResponseCode.INTERNAL_ERROR, e.getMessage());

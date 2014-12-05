@@ -56,7 +56,7 @@ public class GuestSimulator extends Thread {
 
         for (int i = 0; i < ROOMS.length; i++) {
             log.info("opening chatroom");
-            ChatRoom room = chatRoomService.openChatRoom(getRandomName(), topicRef);
+            ChatRoom room = chatRoomService.openChatRoomByTopic(getRandomName(), topicRef);
             log.info("chatroom is opened: " + room.getId());
             ROOMS[i] = room;
             postMessages();

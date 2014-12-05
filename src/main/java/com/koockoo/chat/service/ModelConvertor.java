@@ -56,6 +56,7 @@ public class ModelConvertor {
 
     public GuestUI guestToUI(Guest e) {
         GuestUI g = new GuestUI();
+        g.setId(e.getId());
         g.setDisplayName(e.getDisplayName());
         g.setLocation(e.getLocation());
         g.setEnv(e.getEnv());

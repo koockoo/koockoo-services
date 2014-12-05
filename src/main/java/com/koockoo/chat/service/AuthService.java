@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koockoo.chat.dao.AuthDAO;
-import com.koockoo.chat.model.ChatGuest;
 import com.koockoo.chat.model.Credentials;
 import com.koockoo.chat.model.db.Auth;
+import com.koockoo.chat.model.db.Guest;
 import com.koockoo.chat.model.db.Operator;
 import com.koockoo.chat.simulate.GuestSimulator;
 
@@ -93,13 +93,18 @@ public class AuthService {
 	 * @param displayName
 	 * @return Auth
 	 */
-	public Auth guestSignin(String displayName) {
-		ChatGuest guest = new ChatGuest();
+	public Auth guestSignin(String displayName, String topicRef) {
+		Guest guest = new Guest();
 		guest.setDisplayName(displayName);
-		dao.save(guest);
+		guest.setTopicRef(topicRef);
 		Auth auth = new Auth();
 		auth.setGuestRef(guest.getId());
-		dao.save(auth);		
+		auth.setTopicRef(topicRef);
+
+		dao.withBatch()
+		   .save(guest)
+		   .save(auth)
+		   .execute();
 		return auth;
 	}	
 	
