@@ -56,9 +56,7 @@ public class ChatRoomService {
     } 
     
     /**
-     * Open ChatRoom this will open a new ChatRoom. 
-     * 1. Create a guest which requests communication 
-     * 2. Create a ChatRoom
+     * Operator accepts chat request. 
      */
     public ChatRoom acceptChatRoom(String roomRef, String operatorRef) {
         ChatRoom r = dao.get(roomRef);

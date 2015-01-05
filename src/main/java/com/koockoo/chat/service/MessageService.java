@@ -19,7 +19,13 @@ public class MessageService {
 
     @Autowired
     MessageDAO dao;
-
+   
+    /** publish message by guest */
+    public Message publishMessageByGuest(String authorRef, String text) {
+        Guest g = dao.get(Guest.class, authorRef);
+        return publishMessage(authorRef, 0, g.getChatRoomRef(),text);
+    }
+    
     /** Build and save a Message asynchronously */
     public Message publishMessage(String authorRef, int authorType, String chatRoomId, String text) {
         MessageKey key = new MessageKey();

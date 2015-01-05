@@ -10,7 +10,7 @@ import com.koockoo.chat.model.Credentials;
 import com.koockoo.chat.model.db.Auth;
 import com.koockoo.chat.model.db.Guest;
 import com.koockoo.chat.model.db.Operator;
-import com.koockoo.chat.simulate.GuestSimulator;
+import com.koockoo.chat.simulate.ChatSimulator;
 
 @Service
 public class AuthService {
@@ -21,7 +21,7 @@ public class AuthService {
 	private AuthDAO dao; 
 
     @Autowired
-    private GuestSimulator guestSimulator; 	
+    private ChatSimulator guestSimulator; 	
 	/**
 	 * Create Credentials object for the given operator.
 	 * @param login 
@@ -61,11 +61,6 @@ public class AuthService {
 			auth.setOperatorRef(op.getId());
 			auth.setTopicRef(op.getTopicRef());
 			auth = dao.save(auth);
-		}
-		
-		// this is for simulating and demo purposes
-		if (login.contains("@1") && login.length() == 3) {
-		    guestSimulator.begin(auth.getTopicRef());
 		}
 		return auth;
 	}	

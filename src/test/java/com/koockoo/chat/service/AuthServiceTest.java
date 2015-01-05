@@ -13,7 +13,6 @@ import com.datastax.driver.mapping.EntityTypeParser;
 import com.koockoo.chat.Main;
 import com.koockoo.chat.model.Credentials;
 import com.koockoo.chat.model.db.Auth;
-import com.koockoo.chat.model.db.Operator;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = Main.class, loader = SpringApplicationContextLoader.class)
@@ -24,8 +23,7 @@ public class AuthServiceTest {
 	
 	@BeforeClass
 	public static void init() { 
-		EntityTypeParser.remove(Auth.class);
-		EntityTypeParser.remove(Operator.class);
+		EntityTypeParser.removeAll();
 	}	
 
 	@Test
@@ -55,7 +53,7 @@ public class AuthServiceTest {
 	
 	@Test
 	public void testGuestAuth() throws Exception {
-		Auth auth = target.guestSignin("test_name");
+		Auth auth = target.guestSignin("test_name", "ref");
 		Assert.assertNotNull(auth);
 		
 		//signout

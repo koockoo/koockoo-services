@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.koockoo.chat.dao.CommonDAO;
 import com.koockoo.chat.model.db.ChatRoom;
+import com.koockoo.chat.service.AccountService;
 import com.koockoo.chat.service.ChatRoomService;
 import com.koockoo.chat.service.MessageService;
 
 @Service
-public class GuestSimulator extends Thread {
+public class ChatSimulator {
 
-    private static final Logger     log      = Logger.getLogger(GuestSimulator.class.getName());
+    private static final Logger     log      = Logger.getLogger(ChatSimulator.class.getName());
     private static final String[]   NAMES    = { "Clinet 1", "Clinet 2", "Clinet 3", "Clinet 4", "Николай Степаныч", "Андрей Семеныч", "Вадим" };
     private static final ChatRoom[] ROOMS    = new ChatRoom[10];
     private static final Random     RANDOM   = new Random();
@@ -24,35 +25,31 @@ public class GuestSimulator extends Thread {
 
     @Autowired
     MessageService                  messageService;
+    
+    @Autowired
+    AccountService accountService;
 
     @Autowired
     CommonDAO                       dao;
 
-    private String topicRef = "50d96f99-16c4-4ecf-a3bb-3a98b008e817";
-
-    public GuestSimulator() {
+    public void startTalkingToGuest(String chatRoomId, String operatorRef) {
+        log.info("talk to guest simulator started");
+        chatRoomService.acceptChatRoom(chatRoomId, operatorRef);
+        for (int i=0; i<10; i++) {
+            messageService.publishMessage(operatorRef, 1, chatRoomId, "some text "+ i);
+            sleepMe(1000);
+        }
+        log.info("talk to guest simulator completed");
     }
-
-    public GuestSimulator(String topicRef) {
-        this.topicRef = topicRef;
-    }
-
-    public void begin(String topicRef) {
-        GuestSimulator gs = new GuestSimulator(topicRef);
-        gs.chatRoomService = chatRoomService;
-        gs.messageService = messageService;
-        gs.dao = dao;
-        gs.start();
-    }
-
-    public void run() {
-        log.info("guest simulator started in new thread");
-        openChatRooms();
+    
+    public void startTalkingToOperator(String topicRef) {
+        log.info("guest simulator started");
+        openChatRooms(topicRef);
         postMessages();
         log.info("guest simulator completed");
     }
-
-    public void openChatRooms() {
+    
+    public void openChatRooms(String topicRef) {
 
         for (int i = 0; i < ROOMS.length; i++) {
             log.info("opening chatroom");
@@ -103,7 +100,7 @@ public class GuestSimulator extends Thread {
 
     private void sleepMe(long l) {
         try {
-            sleep(l);
+            Thread.sleep(l);
         } catch (InterruptedException e) {
         }
     }
