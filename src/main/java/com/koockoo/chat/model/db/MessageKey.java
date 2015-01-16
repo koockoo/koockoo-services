@@ -1,15 +1,15 @@
 package com.koockoo.chat.model.db;
 
 import java.util.UUID;
-
 import javax.persistence.Column;
+import com.datastax.driver.core.utils.UUIDs;
 
 public class MessageKey {
     
     private String chatRoomId;
     
     @Column(columnDefinition="timeuuid")
-    private UUID id = java.util.UUID.fromString(new com.eaio.uuid.UUID().toString());
+    private UUID id = UUIDs.timeBased();
  
     public UUID getId() {
         return id;
